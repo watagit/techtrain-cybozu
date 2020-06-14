@@ -9,6 +9,7 @@
       </div>
     </div>
     <div class="list">
+      <Editor :currentUser="currentUser" />
       <Item
         v-for="post in orderBy(myPosts, 'date', -1)"
         :key="post.id"
@@ -21,18 +22,22 @@
 
 <script>
 import { db } from '../main'
+import { auth } from '../main'
 import firebase from 'firebase'
-import Item from '@/components/Item'
 import Vue2Filters from 'vue2-filters'
+import Item from '@/components/Item'
+import Editor from '@/components/Editor'
 
 export default {
   components: {
-    Item
+    Item,
+    Editor
   },
   data () {
     return {
       user: {},
-      myPosts: []
+      myPosts: [],
+      currentUser: {}
     }
   },
   firestore () {
@@ -40,6 +45,11 @@ export default {
       user: db.collection('users').doc(this.$route.params.uid),
       myPosts: db.collection('posts').where('uid', '==', this.$route.params.uid)
     }
+  },
+  created () {
+    auth.onAuthStateChanged(user => {
+      this.currentUser = user
+    })
   },
   mixins: [Vue2Filters.mixin]
 }
