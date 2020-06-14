@@ -5,11 +5,17 @@
       </div>
       <p class="user-name">{{user.name}}</p>
     </div>
-    <div class="content" v-html="post.content"></div>
+    <div v-if="editing" class="editor">
+      <textarea v-model="post.content" placeholder="edit post" @keypress.enter="updatePost">
+      </textarea>
+      <p class="message">Press Enter to Post</p>
+    </div>
+    <div v-else class="content" v-html="post.content"></div>
     <button v-if="currentUser && currentUser.uid == user.id" @click="showBtns = !showBtns">
       <fa icon="ellipsis-v" />
     </button>
     <div v-if="showBtns" class="controls">
+      <li @click="editing = !editing">edit</li>
       <li @click="deletePost" style="color: red">
         delete
       </li>
@@ -28,7 +34,8 @@ export default {
       post: {},
       user: {},
       currentUser: {},
-      showBtns: false
+      showBtns: false,
+      editing: false
     }
   },
   firestore () {
@@ -47,6 +54,16 @@ export default {
       if (window.confirm('Are You Sure to Delete This Post?')) {
         db.collection('posts').doc(this.$props.id).delete()
       }
+    },
+    updatePost () {
+      const date = new Date()
+      db.collection('posts').doc(this.post.id).set({
+        'content': this.post.content,
+        'date': date
+      }, { merge: true })
+      .then(
+        this.editing = false
+      )
     }
   },
 }
