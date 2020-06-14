@@ -1,41 +1,35 @@
 <template>
-  <div class="home">
-    <div class="list">
-      <Item
-        v-for="post in orderBy(posts, 'date', -1)"
-        :key="post.id"
-        :id="post.id"
-        :uid="post.uid"
-      />
+  <li class="item">
+    <div class="user-box">
+      <div class="avatar" :style="'background-image: url('+user.photoURL+')'">
+      </div>
+      <p class="user-name">{{user.name}}</p>
     </div>
-  </div>
+    <div class="content" v-html="post.content">
+    </div>
+  </li>
 </template>
 
 <script>
-import Item from '@/components/Item.vue'
 import { db } from '../main'
-import Vue2Filters from 'vue2-filters'
-
 export default {
-  name: 'home',
+  props: ['id', 'uid'],
   data () {
     return {
-      posts: []
+      post: {},
+      user: {}
     }
   },
   firestore () {
     return {
-      posts: db.collection('posts')
+      post: db.collection('posts').doc(this.$props.id),
+      user: db.collection('users').doc(this.$props.uid)
     }
-  },
-  components: {
-    Item
-  },
-  mixins: [Vue2Filters.mixin]
+  }
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .item
   list-style none
   border-top 1px solid #eee
