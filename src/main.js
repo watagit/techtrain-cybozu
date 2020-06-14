@@ -23,13 +23,13 @@ import 'firebase/firestore'
 Vue.use(firestorePlugin)
 
 firebase.initializeApp({
-  apiKey: "AIzaSyCGLtL67C83YlrhVnu847NyfrW64FRACPI",
-  authDomain: "techtrain-cybozu.firebaseapp.com",
-  databaseURL: "https://techtrain-cybozu.firebaseio.com",
-  projectId: "techtrain-cybozu",
-  storageBucket: "techtrain-cybozu.appspot.com",
-  messagingSenderId: "914587199138",
-  appId: "1:914587199138:web:85cfd9d3d1bee032fa19fb"
+  apiKey: process.env.VUE_APP_API_KEY,
+  authDomain: process.env.VUE_APP_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_DATABASE_URL,
+  projectId: process.env.VUE_APP_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_APP_ID
 })
 
 export const db = firebase.firestore()
